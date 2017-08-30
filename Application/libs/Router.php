@@ -1,14 +1,20 @@
 <?php
 namespace Application\libs;
+
 use Application\libs\Route;
+use Application\controllers\Errors;
+use Exception;
+
 class Router
 {
 	private $routes = null;
-	private $action = 404;
-	private $params = null;
+	private $requestRoute = null;
 
 	public function __construct()
 	{
+		$request_uri = $_SERVER['REQUEST_URI'];
+		$request_method = $_SERVER['REQUEST_METHOD'];
+		$this->requestRoute = new Route($request_uri, $request_method);
 		$this->routes = [];
 	}
 
@@ -22,25 +28,19 @@ class Router
 	} 
 
 	public function doAction() {
-		$requestRoute = new Route($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']);
+		$params = [];
+		$action = [ Errors::class,'notFound'];
 		foreach ($this->routes as $route) {
-			if($route->match($requestRoute)) {
-				$this->params = array_diff($requestRoute->uri, $route->uri);
-				$this->params = array_values($this->params);
-				$this->action = explode(':', $route->action);
+			if($route->match($this->requestRoute)) {
+				$params = array_diff($this->requestRoute->uri, $route->uri);
+				$params = array_values($params);
+				$action = explode(':', $route->action);
 				break;
 			}
 		}
 
-		if($this->action !== 404) {
-			$controller = new $action[0];
-			$controller->$action[1];
-		} else {
-			header('HTTP/1.0 404 Not Found.', true ,404);
-			$controller = new Controller;
-			$controller->render('errors/error404');
-			die();
-		}
-		
+		return ['controller' => $action[0],
+				'method' => $action[1], 
+				'params' => $params];
 	}
 }

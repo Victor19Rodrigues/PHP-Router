@@ -5,14 +5,17 @@ namespace Application\libs;
 */
 class Controller
 {
-	public $params;
-
-	public function __construct($params = [])
+	public function render($view, $data = null) 
 	{
-		$this->params = $params;
-	}
-
-	public function render($view, $data = null) {
-		include_once 'views/layouts/main_layout.php';
+		if(is_array($data)){
+			extract($data);
+		}
+		include_once 'Application/views/main_layout.html.php';
 	} 
+
+	public function redirect($uri)
+	{
+		$host = $_SERVER['HTTP_HOST'];
+		header("Location:$host/$uri");
+	}
 }

@@ -1,12 +1,9 @@
 <?php
 namespace Application\libs;
-/**
-* 
-*/
+use Exception;
 
 class Route
 {
-
 	public $uri;
 
 	public $method;
