@@ -16,6 +16,7 @@ class Controller
 	public function redirect($uri)
 	{
 		$host = $_SERVER['HTTP_HOST'];
-		header("Location:$host/$uri");
+		header("Location:http://$host/$uri");
+		exit();
 	}
 }

@@ -4,13 +4,15 @@
  * no formulário
  */
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-	$_SERVER['REQUEST_METHOD'] = isset($_GET['_method']) ? $_GET['_method'] : 'GET';
+if (isset($_GET['_method'])) {
+	$_SERVER['REQUEST_METHOD'] = $_GET['_method'];
 	$get_attr = strrpos($_SERVER['REQUEST_URI'], '?');
 	if($get_attr) {
 		$uri_fix = substr($_SERVER['REQUEST_URI'],0 ,$get_attr);
 		$_SERVER['REQUEST_URI'] = $uri_fix;
 	}
+} elseif(isset($_POST['_method'])) {
+	$_SERVER['REQUEST_METHOD'] = $_POST['_method'];
 }
 
 /**
