@@ -1,9 +1,14 @@
 <h1>All articles here</h1>
-<form action="/articles/1" method="GET">
-	<input type="hidden" name="_method" value="DELETE">
-	<input type="submit" name="cu">
-</form>
-<a href="/articles/1?_method=DELETE">aaa</a>
-<a href="/articles/1/edit">edit</a>
-<a href="/articles/1">show</a>
+<?php if(isset($articles->many)): ?>
+	<?php foreach ($articles->many as $article): ?>
+	<a href="/articles/<?=$article->id?>">Ver: <?= $article->titulo ?></a>
+	</br>	
+	<?php endforeach ?>
+<?php elseif(isset($articles->id)): ?>
+	<a href="/articles/<?=$articles->id?>">Ver: <?= $articles->titulo ?></a>
+	</br>	
+<?php endif ?>
+
+</br>
 <a href="/articles/new">New Article</a>
+

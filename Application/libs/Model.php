@@ -4,17 +4,18 @@ use Application\libs\DAO;
 
 abstract class Model 
 {
-
 	private function dbConnect() 
 	{
 		return new DAO;
 	}
 	
-	public function setParams(Array $params, Array $filter) 
+	public function setParams(Array $params, Array $filter = null) 
 	{
-		$params = array_filter( $params, function ($key) use ($filter) {
-        	return in_array($key, $filter);
-    	}, ARRAY_FILTER_USE_KEY);
+		if ($filter) {
+			$params = array_filter( $params, function ($key) use ($filter) {
+	        	return in_array($key, $filter);
+	    	}, ARRAY_FILTER_USE_KEY);
+		}
 
 		foreach ($params as $key => $value) 
 		{
@@ -40,13 +41,17 @@ abstract class Model
 	public function find(String $table, Array $attrs = null)
 	{
 		$db = $this->dbConnect();
-		$params = get_object_vars($this);
-		$db->escapeParams($params);
 		$db->select($table,$attrs);
 		if(isset($this->id)) {
 			$db->where("id = ':id'", [':id' => $this->id]);
 		}
-		$db->run();
+		$r = $db->run();
+
+		if ($r->num_rows > 1) {
+			$this->many = $r->fetch_assoc();
+		} elseif($r->num_rows) {
+			$this->setParams($r->fetch_assoc());
+		}
 	}
 
 	public function update(String $table)

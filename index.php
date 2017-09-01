@@ -28,7 +28,7 @@ use Application\libs\Router;
 
 $router = new Router;
 
-include_once __DIR__.'/Application/Routes.php';
+include_once __DIR__.'/Application/routes.php';
 
 extract($router->doAction());
 unset($router);

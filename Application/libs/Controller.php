@@ -1,8 +1,6 @@
 <?php 
 namespace Application\libs;
-/**
-* 
-*/
+
 class Controller
 {
 	public function render($view, $data = null) 

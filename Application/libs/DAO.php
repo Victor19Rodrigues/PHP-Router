@@ -7,7 +7,6 @@ class DAO
 {
 	private $conn;
 	private $sql;
-	private $result;
 
 	public function __construct()
 	{
@@ -46,7 +45,7 @@ class DAO
 	{
 		$this->sql = "UPDATE $table SET ";
 		foreach ($set as $key => $value) {
-			$this->sql .="$key='$value', ";
+			$this->sql .="$key='$value',";
 		}
 		$this->sql = substr($this->sql, 0, -1);
 		return $this;
@@ -71,9 +70,7 @@ class DAO
 		
 	public function run()
 	{
-		//$this->result = $this->conn->query($this->query);
-		echo $this->sql;
-		//return $this->result;
+		return $this->conn->query($this->sql);
 	}
 
 	public function escapeParams(&$params)
